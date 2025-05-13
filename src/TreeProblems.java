@@ -1,5 +1,8 @@
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
 public class TreeProblems {
 
@@ -133,7 +136,38 @@ public class TreeProblems {
    Hint: There's a simple way to do this!
   */
   public static int sumTree(Map<Integer, List<Integer>> tree) {
-    return -1;
+    if (tree == null || tree.isEmpty()) {
+      return 0;
+    }
+
+    Set<Integer> children = new HashSet<>();
+    for (List<Integer> childList : tree.values()) {
+        children.addAll(childList);
+    }
+
+    Integer root = null;
+    for (Integer node : tree.keySet()) {
+        if (!children.contains(node)) {
+            root = node;
+            break;
+        }
+    }
+
+    Stack<Integer> stack = new Stack<>();
+    stack.push(root);
+    int sum = 0;
+
+    while(!stack.isEmpty()) {
+      int node = stack.pop();
+      sum += node;
+
+      if (tree.containsKey(node)) {
+        for (int child : tree.get(node)) {
+          stack.push(child);
+        }
+      }
+    }
+    return sum;
   }
 
   /*
